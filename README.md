@@ -7,7 +7,8 @@ Este documento describe aspectos técnicos clave del **Digital Gateway**, incluy
 ## 1. Estructura del Bitmap ISO 8583
 
 **Pregunta:**  
-¿Cómo está estructurado tu bitmap ISO 8583?
+# ¿Cómo está estructurado tu bitmap ISO 8583?
+<!--  -->
 El Bitmap ISO8583 se compone del MTI (indica qué operación se va a realizar), y luego hay 2 bitmaps. Si en el primer bitmap, la primera letra o número (que se encuentra en hexadecimal), al convertirlo a binario, es un 0, significa que a partir de la siguiente línea ya son los campos presentes en la trama. Si en cambio, es un 1, significa que la siguiente línea es un 2do bitmap.
 Los bitmaps nos indican qué campos están presentes y qué campos no lo están en la trama.
 Mínimo hay 1 bitmap y máximo 2, cada bitmap son 64bits (lo que equivale a 63 campos en el primer bitmap ya que el primer número solo indica si hay un segundo bitmap) y el segundo bitmap nos indica los campos presentes desde el campo 64 hasta el 127.
@@ -16,8 +17,10 @@ En un caso real, habría que validar solo las 2 primeras líneas y a partir de l
 Luego hago una conversión de los bitmaps hexadecimales a binario. Valido el primer bitmap y si su primer dígito es 1, entonces hago la conversión del segundo bitmap.
 Luego de ello, hago un recorrido por los Data Elements (DE) y valido su longitud según su tipo. Para ello, cree un archivo en la carpeta config donde tengo la definición de los campos, su tipo y su longitud.
 Con esto, una vez acabo de recorrer el mensaje ISO8583, creo un objeto java listo para ser transformado a JSON y devolverlo como respuesta al controllador, el que luego se encargará de enviar la respuesta al microservicio consumidor.
+---
 
-¿Cómo determinas si un campo está presente?
+**Pregunta:**
+# ¿Cómo determinas si un campo está presente?
 
 **Respuesta:**
 <!--  -->
@@ -29,7 +32,7 @@ Basicamente recorremos el número binario y si es un 1 y vamos en la 3ra vuelta,
 ## 2. Parsing de Reglas de Producto
 
 **Pregunta:**  
-¿Qué estrategia usaste para el parsing XML de las reglas de producto? ¿JAXB, StAX, DOM? ¿Por qué?
+# ¿Qué estrategia usaste para el parsing XML de las reglas de producto? ¿JAXB, StAX, DOM? ¿Por qué?
 
 **Respuesta:**
 <!--  -->
@@ -38,25 +41,25 @@ Lamentablemente, por falta de tiempo no pude completar esta parte de la prueba t
 
 ## 3. Concurrencia en el Cliente TCP
 
-**Pregunta:**  
-¿Cómo manejas la concurrencia en el cliente TCP?
-
-<!--  -->
-Para el cliente TCP la concurrencia la manejo mediante hilos. Cada hilo maneja la lectura y escritura de su operación de manera independiente, evitando el bloqueo de otras operaciones.
----
-
-¿Usas una conexión por request o un pool de conexiones?
+**Pregunta:**
+# ¿Cómo manejas la concurrencia en el cliente TCP?
 
 **Respuesta:**
 <!--  -->
+Para el cliente TCP la concurrencia la manejo mediante hilos. Cada hilo maneja la lectura y escritura de su operación de manera independiente, evitando el bloqueo de otras operaciones.
+---
+**Pregunta:**
+# ¿Usas una conexión por request o un pool de conexiones?
 
+**Respuesta:**
+<!--  -->
 Una conexión por request puede ser muy poco escalable y tiende a mayor consumo y latencia por lo que a gran escala representa un peor rendimiento. Procuro inclinarme más a usar un pool de conexiones la cual se puede reutilizar ahorrando recursos y reduciendo latencia lo que a gran escala se siente.
 ---
 
 ## 4. Consideraciones si el CORE fuera IBM MQ
 
-**Pregunta:**  
-¿Qué harías diferente si el CORE usara IBM MQ en lugar de TCP directo?
+**Pregunta:**
+# ¿Qué harías diferente si el CORE usara IBM MQ en lugar de TCP directo?
 
 **Respuesta:**
 <!--  -->
@@ -66,8 +69,8 @@ Tampoco me tendría que preocupar por perdida de mensajes, usando algún caché 
 
 ## 5. Extensibilidad del Gateway
 
-**Pregunta:**  
-¿Cómo extenderías el Gateway para soportar un nuevo producto bancario sin modificar código Java?
+**Pregunta:** 
+# ¿Cómo extenderías el Gateway para soportar un nuevo producto bancario sin modificar código Java?
 
 **Respuesta:**
 <!--  -->
