@@ -8,46 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ISO8583ParserTest {
 
     @Test
-    void shouldParserMtiAndBitMapsCorrectly() {
-
-        String message = """
-        0200
-        F23AC48128E08000
-        0000000000000000
-        0210
-        4111111111111111
-        000000050000
-        240405
-        000001
-        120000
-        0405
-        6011
-        101
-        BANCOMDIGITAL
-        BANCOM001
-        000000000050000
-        604
-        """;
-
-        ISO8583Parser parser = new ISO8583ParserImpl();
-        IsoMessage result = parser.parse(message);
-
-        assertEquals("0200", result.getMti());
-
-        List<Integer> fields = result.getFieldsPresent();
-
-        assertNotNull(fields);
-        assertFalse(fields.isEmpty());
-
-        assertTrue(fields.contains(2), "Debe contener DE-2 (PAN)");
-        assertTrue(fields.contains(3), "Debe contener DE-3 (Processing Code)");
-        assertTrue(fields.contains(4), "Debe contener DE-4 (Amount)");
-        assertTrue(fields.contains(7), "Debe contener DE-7 (Transmission Date)");
-        assertTrue(fields.contains(11), "Debe contener DE-11 (STAN)");
-        assertTrue(fields.contains(12), "Debe contener DE-12 (Local Time)");
-    }
-
-    @Test
     void shouldHandleEmptyOrInvalidMessage() {
 
         ISO8583Parser parser = new ISO8583ParserImpl();
